@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Pertanian Terpadu (Zero Waste)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; }
+        .hidden { display: none !important; }
+        .loader { border: 4px solid #d1fae5; border-top: 4px solid #16a34a; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="text-gray-800 flex flex-col min-h-screen">
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-lg">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-extrabold text-green-700 mb-2">Simulasi Zero Waste</h1>
+            <p class="text-green-600 font-semibold">Integrated Farming - Agribisnis Ternak</p>
+        </div>
+
+        <!-- Materi Esensial -->
+        <div id="materiCard" class="bg-blue-50 rounded-xl shadow-md p-6 mb-6 border-l-4 border-blue-500">
+            <h2 class="text-xl font-bold text-blue-800 mb-3 flex items-center">
+                <span>📖 Materi Esensial: Integrated Farming</span>
+            </h2>
+            <div class="space-y-3 text-sm text-gray-700">
+                <p><strong>Konsep Zero Waste:</strong> Pendekatan holistik yang mengintegrasikan tanaman, ternak, perikanan, dan pengelolaan limbah. Contohnya, kotoran ayam untuk pupuk padi, dedak padi untuk pakan ayam, dan sisa panen untuk pakan sapi[cite: 2].</p>
+                <p><strong>Analogi "Pabrik Daur Ulang Alami":</strong> Sistem ini bekerja layaknya pabrik mandiri. Limbah dari satu bagian lahan langsung menjadi bahan baku (input) bagi bagian lahan lainnya.</p>
+                <p><strong>Contoh Nyata:</strong></p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Sapi & Jagung (Blitar):</strong> Limbah sisa panen jagung dijadikan pakan sapi. Kotoran sapi kemudian diproses menjadi pupuk organik untuk ladang jagung.</li>
+                    <li><strong>Joglo Tani (Yogyakarta, 2026):</strong> Petani mempraktikkan filosofi kemandirian di mana kotoran ternak wajib dikembalikan menjadi pupuk dan limbah pertanian menjadi pakan.</li>
+                </ul>
+                <p><strong>Manfaat Sesuai Realita:</strong> Menghemat modal petani karena menekan pembelian pupuk kimia dan pakan pabrikan. Petani juga mendapat ragam penghasilan ganda (dari panen beras, telur, susu, hingga biogas) yang menguatkan ketahanan ekonomi.</p>
+            </div>
+        </div>
+
+        <!-- Aturan Main -->
+        <div id="rulesCard" class="bg-white rounded-xl shadow-md p-6 mb-6 border-l-4 border-green-500">
+            <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                <span>📜 Aturan Main: Peta Kawasan Impian</span>
+            </h2>
+            <ul class="list-disc pl-5 text-sm space-y-2 text-gray-600">
+                <li>Satu kelompok terdiri dari 4 peran (Ahli Unggas, Ahli Agronomi, Ahli Ruminansia, Manajer Zero Waste).</li>
+                <li>Setiap kelompok memegang 1 lembar kertas A3 untuk menggambar peta konsep/layout 'Kawasan Peternakan Impian'[cite: 2].</li>
+                <li>Setiap murid wajib berdiskusi, menggambar zonanya masing-masing, dan menarik garis panah (Siklus Input/Output) antar zona.</li>
+                <li>Pilih kelas dan nama Anda di bawah untuk mendapatkan tugas gambar spesifik Anda!</li>
+            </ul>
+        </div>
+
+        <!-- Form Pemilihan -->
+        <div id="formCard" class="bg-white rounded-xl shadow-lg p-6">
+            <div id="loadingData" class="py-6 text-center">
+                <div class="loader mb-3"></div>
+                <p class="text-green-600 font-medium">Memuat data murid...</p>
+            </div>
+
+            <form id="roleForm" class="hidden space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Kelas</label>
+                    <select id="kelasSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none bg-gray-50">
+                        <option value="">-- Pilih Kelas --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Murid</label>
+                    <select id="namaSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none bg-gray-50" disabled>
+                        <option value="">-- Pilih Nama --</option>
+                    </select>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Ambil Peran & Tugas Saya
+                </button>
+            </form>
+        </div>
+
+        <!-- Hasil Peran (Awalnya Sembunyi) -->
+        <div id="resultCard" class="hidden bg-white rounded-xl shadow-lg overflow-hidden border border-green-200">
+            <div class="bg-green-600 text-white text-center py-6 px-4">
+                <p class="text-sm font-semibold uppercase tracking-wider mb-1">Peran Anda Adalah</p>
+                <h2 id="roleName" class="text-3xl font-extrabold uppercase">Memuat...</h2>
+            </div>
+            <div class="p-6">
+                <h3 class="font-bold text-gray-800 mb-3 text-lg">Tugas Gambar Spesifik:</h3>
+                <div id="roleInstructions" class="prose prose-sm text-gray-700 space-y-3 leading-relaxed">
+                    <!-- Instruksi akan diinjeksi di sini -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Copyright -->
+    <footer class="bg-green-800 py-4 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-green-100 text-sm font-medium">
+                &copy; 2026 Bapak Fajar, S.Pt. - Agribisnis Ternak SMKN 2 Purbalingga
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ======= GANTI URL DI BAWAH INI DENGAN URL APPS SCRIPT ANDA =======
+        const GAS_URL = "PASTE_URL_WEB_APP_APPS_SCRIPT_DI_SINI";
+        
+        let muridData = {};
+
+        const kelasSelect = document.getElementById('kelasSelect');
+        const namaSelect = document.getElementById('namaSelect');
+        const roleForm = document.getElementById('roleForm');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        window.onload = async () => {
+            try {
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: "get_data" })
+                });
+                
+                const resData = await response.json();
+                if (resData.status === "success") {
+                    muridData = resData.data;
+                    populateKelas();
+                    document.getElementById('loadingData').classList.add('hidden');
+                    roleForm.classList.remove('hidden');
+                }
+            } catch (error) {
+                alert("Gagal memuat data. Pastikan koneksi internet stabil.");
+            }
+        };
+
+        function populateKelas() {
+            Object.keys(muridData).forEach(kelas => {
+                const opt = document.createElement('option');
+                opt.value = kelas;
+                opt.textContent = kelas;
+                kelasSelect.appendChild(opt);
+            });
+        }
+
+        kelasSelect.addEventListener('change', (e) => {
+            const kelas = e.target.value;
+            namaSelect.innerHTML = '<option value="">-- Pilih Nama --</option>';
+            
+            if (kelas && muridData[kelas]) {
+                muridData[kelas].forEach(nama => {
+                    const opt = document.createElement('option');
+                    opt.value = nama;
+                    opt.textContent = nama;
+                    namaSelect.appendChild(opt);
+                });
+                namaSelect.disabled = false;
+            } else {
+                namaSelect.disabled = true;
+            }
+        });
+
+        roleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const kelas = kelasSelect.value;
+            const nama = namaSelect.value;
+            
+            if (!kelas || !nama) return alert("Pilih kelas dan nama terlebih dahulu!");
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="loader w-5 h-5 border-2"></div>';
+
+            try {
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: "claim_role", kelas: kelas, nama: nama })
+                });
+                
+                const resData = await response.json();
+                
+                if (resData.status === "success") {
+                    document.getElementById('materiCard').classList.add('hidden');
+                    document.getElementById('rulesCard').classList.add('hidden');
+                    document.getElementById('formCard').classList.add('hidden');
+                    
+                    document.getElementById('resultCard').classList.remove('hidden');
+                    document.getElementById('roleName').textContent = resData.peran;
+                    
+                    const formattedInstructions = resData.instruksi.replace(/\n/g, "<br>");
+                    document.getElementById('roleInstructions').innerHTML = formattedInstructions;
+                } else {
+                    alert("Error: " + resData.message);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Ambil Peran & Tugas Saya";
+                }
+            } catch (error) {
+                alert("Terjadi kesalahan sistem saat memproses peran.");
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Ambil Peran & Tugas Saya";
+            }
+        });
+    </script>
+</body>
+</html>
